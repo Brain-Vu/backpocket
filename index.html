@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backpocket</title>
+    <link rel="stylesheet" href="./post-it.css" />
+  </head>
+
+  <body>
+    <h>Backpocket</h>
+    <div id="moveable-area">
+      <div class="post-it" id="fred">
+        <div class="post-it-header" id="beth">
+          <button class="post-it-exit"></button>
+        </div>
+        <div class="post-it-body">
+          <form id="post-it-form">
+            <textarea
+              id="post-it-content"
+              name="post1"
+              placeholder="TEXT"
+              maxlength="100"
+            ></textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <button type="submit">BUTTOn</button> -->
+
+    <script src="./scripts/post-it-logic.js"></script>
+    <script src="./scripts/post-it-process.js"></script>
+  </body>
+</html>
