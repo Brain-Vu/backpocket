@@ -8,20 +8,20 @@
   </head>
 
   <body>
-    <h>Backpocket</h>
-
-    <button id="duplicate-button">DUPLICATE</button>
+    <div id="temp-header">
+      <h>Backpocket</h>
+      <button id="duplicate-button">+</button>
+    </div>
 
     <div id="moveable-area">
       <div class="post-it" id="p" hidden>
-        <div class="post-it-header" id="ph">
-          <button class="post-it-exit"></button>
+        <div class="post-it-header" id="ph">x
+          <div class="post-it-header-state"></div>
         </div>
         <div class="post-it-body">
           <form class="post-it-form">
             <textarea
               class="post-it-content"
-              name="post1"
               placeholder="TEXT"
               maxlength="100"
             ></textarea>
@@ -31,14 +31,12 @@
     </div>
 
     <div id="contextMenu" class="context-menu" hidden>
-        <ul>
-            <li><a href="#">Element-1</a></li>
-            <li><a href="#">Element-2</a></li>
-        </ul>
+      <ul>
+        <li><button id="context-connect">Connect</button></li>
+        <li><button id="context-duplicate">Duplicate</button></li>
+        <li><button id="context-delete">Delete</button></li>
+      </ul>
     </div>
-
-    <!-- <button type="submit">BUTTOn</button> -->
-
     <script src="./scripts/post-it-logic.js" type="module"></script>
     <script src="./scripts/post-it-process.js" type="module"></script>
   </body>

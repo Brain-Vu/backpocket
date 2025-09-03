@@ -1,34 +1,38 @@
+import { create } from "./post-it-process.js";
+
 let order = 0;
+let focusedPostIt;
+let menu = document.getElementById("contextMenu");
+
 dragElement("p");
 
 function rightClickElement(event) {
   event.preventDefault();
 
-  let menu = document.getElementById("contextMenu");
-
-  document.onclick = hideMenu;
-
-  function hideMenu() {
+  document.onclick = () => {
     menu.hidden = true;
-  }
+  };
 
   menu.hidden = false;
   menu.style.left = event.clientX + "px";
   menu.style.top = event.clientY + "px";
+
+  focusedPostIt = event.target.closest(".post-it");
+  console.log(focusedPostIt);
 }
 
-function deleteElement(event) {
-  event.target.parentElement.parentElement.remove();
+function deleteElement(element) {
+  element.remove();
 }
 
-function dragElement(post_it_id) {
+function dragElement(postItID) {
   const moveableArea = document.getElementById("moveable-area");
   const moveableRect = moveableArea.getBoundingClientRect();
 
-  let post_it = document.getElementById(post_it_id);
+  let postIt = document.getElementById(postItID);
 
-  let postItHeader = post_it.querySelector(".post-it-header");
-  const postItRect = post_it.getBoundingClientRect();
+  let postItHeader = postIt.querySelector(".post-it-header");
+  const postItRect = postIt.getBoundingClientRect();
 
   let currX = 0,
     currY = 0,
@@ -48,10 +52,10 @@ function dragElement(post_it_id) {
     currX = e.clientX;
     currY = e.clientY;
 
-    offsetX = e.clientX - parseInt(post_it.style.left || 0);
-    offsetY = e.clientY - parseInt(post_it.style.top || 0);
+    offsetX = e.clientX - parseInt(postIt.style.left || 0);
+    offsetY = e.clientY - parseInt(postIt.style.top || 0);
 
-    post_it.style.zIndex = "" + order++;
+    postIt.style.zIndex = "" + order++;
 
     document.addEventListener("mousemove", mouseDrag);
     document.addEventListener("mouseup", mouseUp);
@@ -60,7 +64,7 @@ function dragElement(post_it_id) {
   function mouseDrag(e) {
     e.preventDefault();
 
-    post_it.style.boxShadow = "10px 10px 10px black";
+    postIt.style.boxShadow = "10px 10px 10px black";
 
     currX = e.clientX;
     currY = e.clientY;
@@ -68,23 +72,35 @@ function dragElement(post_it_id) {
     newPosY = currY - offsetY;
     newPosX = currX - offsetX;
 
-    if (newPosY < 0) post_it.style.top = 0;
+    if (newPosY < 0) postIt.style.top = 0;
     else if (newPosY > maxY - postItHeight)
-      post_it.style.top = maxY - postItHeight + "px";
-    else post_it.style.top = newPosY + "px";
+      postIt.style.top = maxY - postItHeight + "px";
+    else postIt.style.top = newPosY + "px";
 
-    if (newPosX < 0) post_it.style.left = 0;
+    if (newPosX < 0) postIt.style.left = 0;
     else if (newPosX > maxX - postItWidth)
-      post_it.style.left = maxX - postItWidth + "px";
-    else post_it.style.left = newPosX + "px";
+      postIt.style.left = maxX - postItWidth + "px";
+    else postIt.style.left = newPosX + "px";
   }
 
   function mouseUp(e) {
-    post_it.style.boxShadow = "2px 2px 5px black";
+    postIt.style.boxShadow = "2px 2px 5px black";
 
     document.removeEventListener("mousemove", mouseDrag);
     document.removeEventListener("mouseup", mouseUp);
   }
 }
+
+// where this boy go???
+function deleteWrapper() {
+  deleteElement(focusedPostIt);
+}
+function duplicateWrapper() {
+  create(focusedPostIt, true);
+}
+menu.querySelector("#context-delete").addEventListener("click", deleteWrapper);
+menu
+  .querySelector("#context-duplicate")
+  .addEventListener("click", duplicateWrapper);
 
 export { dragElement, deleteElement, rightClickElement };

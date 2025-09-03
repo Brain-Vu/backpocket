@@ -1,33 +1,47 @@
-import { dragElement, deleteElement, rightClickElement } from "./post-it-logic.js";
+import {
+  dragElement,
+  deleteElement,
+  rightClickElement,
+} from "./post-it-logic.js";
 
-let num_posts = 0;
-create();
+let numPosts = 0;
+let originalPostIt = document.getElementById("p");
+let focusedPostIt = null;
 
-function create() {
-  let original = document.getElementById("p");
+create(originalPostIt);
 
-  if (original) {
-    let duplicate = original.cloneNode(true);
-    duplicate.hidden = false;
-    let duplicate_header = duplicate.querySelector(".post-it-header");
+// allows the creation of a new post-it note, exact determines if it should be exact copy
 
-    duplicate.id = "p" + num_posts;
-    duplicate_header.id = "ph" + num_posts++;
+function create(reference, exact = false) {
+  if (reference) {
+    let newElement = reference.cloneNode(true);
+    let newElementHeader = newElement.querySelector(".post-it-header");
 
-    duplicate.style.top = "0px";
-    duplicate.style.left = "0px";
+    newElement.hidden = false;
+    newElement.id = "p" + numPosts;
+    newElementHeader.id = "ph" + numPosts++;
 
-    duplicate.querySelector(".post-it-content").value = "";
-    document.getElementById("moveable-area").appendChild(duplicate);
+    if (exact) {
+      newElement.style.top = parseInt(reference.style.top) + 10 + "px";
+      newElement.style.left = parseInt(reference.style.left) + 10 + "px";
+    } else {
+      newElement.style.top = "0px";
+      newElement.style.left = "0px";
+      newElement.querySelector(".post-it-content").value = "";
+    }
 
-    dragElement(duplicate.id);
+    document.getElementById("moveable-area").appendChild(newElement);
 
-    duplicate.addEventListener("contextmenu", rightClickElement)
-    duplicate_header.querySelector(".post-it-exit").addEventListener("click", deleteElement);
-   }
+    // adding logic
+    dragElement(newElement.id);
+    newElement.addEventListener("contextmenu", rightClickElement);
+  }
 }
 
-document.getElementById("duplicate-button").addEventListener("click", create);
+document
+  .getElementById("duplicate-button")
+  .addEventListener("click", () => create(originalPostIt));
+
 
 // document
 //   .getElementById("allposts")
@@ -48,3 +62,5 @@ document.getElementById("duplicate-button").addEventListener("click", create);
 //     console.log(t);
 //   }
 // }
+
+export { create };
