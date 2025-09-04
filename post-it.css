@@ -8,10 +8,9 @@
   gap: 10px;
 }
 #moveable-area {
-  width: 100%;
+  aspect-ratio: 16/9;
   height: 600px;
   background-color: #383e48;
-  position: relative;
 }
 #duplicate-button {
   display: flex;
@@ -26,10 +25,28 @@
 }
 
 body {
+  flex-direction: column;
   background-color: #23272d;
   color: #abb2bf;
   font-family: "NataSans";
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+  scrollbar-width:none;
+}
+
+/* Connection Formatting */
+/* .connection {
+  height:100%;
+  width:100%;
+} */
 
 /* Context Menu Formatting */
 .context-menu {
@@ -98,7 +115,14 @@ body {
   border-radius: 4px 4px 0px 0px;
   align-items: center;
   justify-content: center;
+}
+.post-it-header-state {
   color: #978b5f;
+  font-weight: normal;
+}
+.post-it-header-state.selected {
+  color: #e34d50;
+  font-weight: bold;
 }
 .post-it-body {
   width: 100%;
