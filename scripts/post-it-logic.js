@@ -1,36 +1,13 @@
+import { create } from "./post-it-process.js";
+
 let order = 0;
 let focusedPostIt;
+let menu = document.getElementById("contextMenu");
 
-function setActivated(postIt, turnOn) {
-  let postItHeaderState = postIt
-    .querySelector(".post-it-header")
-    .querySelector(".post-it-header-state");
-  if (turnOn) {
-    postItHeaderState.classList.add("selected");
-    postItHeaderState.innerText = "O";
-  } else {
-    postItHeaderState.classList.remove("selected");
-    postItHeaderState.innerText = "x";
-  }
-}
-
-function getFocusedPostIt() {
-  return focusedPostIt;
-}
-
-function deleteElement(postIt) {
-  if (connectedPosts.has(postIt)) connectedPosts.delete(postIt);
-  // gotta remove the insight thing (specifically need to remove the connection as well)
-  postIt.remove();
-}
+dragElement("p");
 
 function rightClickElement(event) {
   event.preventDefault();
-
-  focusedPostIt = event.target.closest(".post-it");
-
-  console.log(focusedPostIt);
-  let menu = document.getElementById("contextMenu");
 
   document.onclick = () => {
     menu.hidden = true;
@@ -39,13 +16,23 @@ function rightClickElement(event) {
   menu.hidden = false;
   menu.style.left = event.clientX + "px";
   menu.style.top = event.clientY + "px";
+
+  focusedPostIt = event.target.closest(".post-it");
+  console.log(focusedPostIt);
 }
 
-function dragElement(postIt) {
-  let postItHeader = postIt.querySelector(".post-it-header");
-  const postItRect = postIt.getBoundingClientRect();
+function deleteElement(element) {
+  element.remove();
+}
+
+function dragElement(postItID) {
   const moveableArea = document.getElementById("moveable-area");
   const moveableRect = moveableArea.getBoundingClientRect();
+
+  let postIt = document.getElementById(postItID);
+
+  let postItHeader = postIt.querySelector(".post-it-header");
+  const postItRect = postIt.getBoundingClientRect();
 
   let currX = 0,
     currY = 0,
@@ -54,19 +41,19 @@ function dragElement(postIt) {
     newPosX = 0,
     newPosY = 0,
     maxX = moveableRect.width,
-    maxY = moveableRect.height, // need to do something about this not being updated
+    maxY = moveableRect.height,
     postItWidth = postItRect.width,
     postItHeight = postItRect.height;
 
   postItHeader.addEventListener("mousedown", mouseDown);
 
-  function mouseDown(event) {
-    event.preventDefault();
-    currX = event.clientX;
-    currY = event.clientY;
+  function mouseDown(e) {
+    e.preventDefault();
+    currX = e.clientX;
+    currY = e.clientY;
 
-    offsetX = event.clientX - parseInt(postIt.style.left || 0);
-    offsetY = event.clientY - parseInt(postIt.style.top || 0);
+    offsetX = e.clientX - parseInt(postIt.style.left || 0);
+    offsetY = e.clientY - parseInt(postIt.style.top || 0);
 
     postIt.style.zIndex = "" + order++;
 
@@ -74,13 +61,13 @@ function dragElement(postIt) {
     document.addEventListener("mouseup", mouseUp);
   }
 
-  function mouseDrag(event) {
-    event.preventDefault();
+  function mouseDrag(e) {
+    e.preventDefault();
 
     postIt.style.boxShadow = "10px 10px 10px black";
 
-    currX = event.clientX;
-    currY = event.clientY;
+    currX = e.clientX;
+    currY = e.clientY;
 
     newPosY = currY - offsetY;
     newPosX = currX - offsetX;
@@ -96,17 +83,24 @@ function dragElement(postIt) {
     else postIt.style.left = newPosX + "px";
   }
 
-  function mouseUp() {
+  function mouseUp(e) {
     postIt.style.boxShadow = "2px 2px 5px black";
+
     document.removeEventListener("mousemove", mouseDrag);
     document.removeEventListener("mouseup", mouseUp);
   }
 }
 
-export {
-  dragElement,
-  deleteElement,
-  rightClickElement,
-  getFocusedPostIt,
-  setActivated,
-};
+// where this boy go???
+function deleteWrapper() {
+  deleteElement(focusedPostIt);
+}
+function duplicateWrapper() {
+  create(focusedPostIt, true);
+}
+menu.querySelector("#context-delete").addEventListener("click", deleteWrapper);
+menu
+  .querySelector("#context-duplicate")
+  .addEventListener("click", duplicateWrapper);
+
+export { dragElement, deleteElement, rightClickElement };
