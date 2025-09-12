@@ -53,7 +53,6 @@ function createPostIt(reference, exact = false) {
     setActivated(newElement, false);
     newElement.addEventListener("contextmenu", rightClickElement);
     document.getElementById("moveable-area").appendChild(newElement);
-    
   }
 }
 
@@ -68,7 +67,7 @@ function applyLogic() {
   let menu = document.getElementById("contextMenu");
   menu
     .querySelector("#context-connect")
-    .addEventListener("click", () => connectPostIt(getFocusedPostIt()));
+    .addEventListener("click", () => setActivated(getFocusedPostIt(), true));
   menu
     .querySelector("#context-duplicate")
     .addEventListener("click", () => createPostIt(getFocusedPostIt(), true));

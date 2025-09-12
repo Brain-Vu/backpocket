@@ -8,9 +8,11 @@
   gap: 10px;
 }
 #moveable-area {
-  aspect-ratio: 16/9;
+  width: 600;
   height: 600px;
   background-color: #383e48;
+  position: relative;
+  box-sizing: border-box;
 }
 #duplicate-button {
   display: flex;
@@ -25,28 +27,13 @@
 }
 
 body {
-  flex-direction: column;
+  height: 0;
+  margin: 0;
+  padding: 4px;
   background-color: #23272d;
   color: #abb2bf;
   font-family: "NataSans";
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-body::-webkit-scrollbar {
-  display: none;
-  scrollbar-width:none;
-}
-
-/* Connection Formatting */
-/* .connection {
-  height:100%;
-  width:100%;
-} */
 
 /* Context Menu Formatting */
 .context-menu {
@@ -83,21 +70,31 @@ body::-webkit-scrollbar {
 
 /* Post-It Formatting */
 .post-it {
-  width: 150px;
+  width: 145px;
   position: absolute;
   container-type: inline-size;
-  box-shadow: 2px 2px 5px black;
+  box-shadow: 2px 2px 5px #131518;
+}
+.post-it.dragged {
+  position: absolute;
+  container-type: inline-size;
+  box-shadow: 5px 5px 5px #08080a;
+}
+.post-it-body {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background-color: #ffeba1;
 }
 .post-it-content {
-  width: 100%;
   height: 100%;
+  width: 100%;
   transform-origin: left;
   background: none;
   outline: none;
   border: none;
   resize: none;
   box-sizing: border-box;
-  font-size: 10cqw;
+  font-size: 12px;
   font-family: "NataSans";
   color: #23272d;
 }
@@ -107,7 +104,7 @@ body::-webkit-scrollbar {
 }
 .post-it-header {
   width: 100%;
-  aspect-ratio: 6/1;
+  height: 25px;
   background-color: #c2b37d;
   cursor: pointer;
   position: relative;
@@ -124,8 +121,4 @@ body::-webkit-scrollbar {
   color: #e34d50;
   font-weight: bold;
 }
-.post-it-body {
-  width: 100%;
-  aspect-ratio: 1/1;
-  background-color: #ffeba1;
-}
+

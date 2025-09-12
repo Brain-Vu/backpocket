@@ -1,6 +1,8 @@
 let order = 0;
 let focusedPostIt;
 
+let connectedPosts = new Set();
+
 function setActivated(postIt, turnOn) {
   let postItHeaderState = postIt
     .querySelector(".post-it-header")
@@ -43,9 +45,7 @@ function rightClickElement(event) {
 
 function dragElement(postIt) {
   let postItHeader = postIt.querySelector(".post-it-header");
-  const postItRect = postIt.getBoundingClientRect();
   const moveableArea = document.getElementById("moveable-area");
-  const moveableRect = moveableArea.getBoundingClientRect();
 
   let currX = 0,
     currY = 0,
@@ -53,15 +53,27 @@ function dragElement(postIt) {
     offsetY = 0,
     newPosX = 0,
     newPosY = 0,
-    maxX = moveableRect.width,
-    maxY = moveableRect.height, // need to do something about this not being updated
-    postItWidth = postItRect.width,
-    postItHeight = postItRect.height;
+    maxX = 0,
+    maxY = 0,
+    postItWidth,
+    postItHeight,
+    moveableRect,
+    postItRect,
+    headerRect;
 
   postItHeader.addEventListener("mousedown", mouseDown);
 
   function mouseDown(event) {
     event.preventDefault();
+    postItRect = postIt.getBoundingClientRect();
+    moveableRect = moveableArea.getBoundingClientRect();
+    postItWidth = postItRect.width;
+    postItHeight = postItRect.height;
+    
+    
+    maxX = moveableRect.width;
+    maxY = moveableRect.height;
+
     currX = event.clientX;
     currY = event.clientY;
 
@@ -76,8 +88,8 @@ function dragElement(postIt) {
 
   function mouseDrag(event) {
     event.preventDefault();
-
-    postIt.style.boxShadow = "10px 10px 10px black";
+    
+    postIt.classList.add("dragged");
 
     currX = event.clientX;
     currY = event.clientY;
@@ -97,7 +109,7 @@ function dragElement(postIt) {
   }
 
   function mouseUp() {
-    postIt.style.boxShadow = "2px 2px 5px black";
+    postIt.classList.remove("dragged");
     document.removeEventListener("mousemove", mouseDrag);
     document.removeEventListener("mouseup", mouseUp);
   }
