@@ -35,6 +35,12 @@ body {
   font-family: "NataSans";
 }
 
+/* Connection Formatting */
+#connections {
+  height: 100%;
+  width: 100%;
+}
+
 /* Context Menu Formatting */
 .context-menu {
   position: absolute;

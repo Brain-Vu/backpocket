@@ -1,46 +1,53 @@
 import {
   dragElement,
-  deleteElement,
+  deletePostIt,
   rightClickElement,
   getFocusedPostIt,
   setActivated,
 } from "./post-it-logic.js";
 
+import { addConnection, deleteConnection } from "./connection-logic.js";
+
 let numPosts = 0;
 let originalPostIt = document.getElementById("p");
 
 createPostIt(originalPostIt); // initial post-it created
+createPostIt(originalPostIt); // second one made for connection testing
 applyLogic();
-
-// creates a connection between two post
-function createConnection(postIt1, postIt2){
-
-}
 
 let connectedPosts = new Set();
 
 function connectPostIt(postIt) {
-  setActivated(postIt, true)
+  setActivated(postIt, true);
+
   if (!connectedPosts.has(postIt)) {
     connectedPosts.add(postIt);
+
     if (connectedPosts.size == 2) {
-      console.log("Connected two");
+      const [post1, post2] = [...connectedPosts];
+      addConnection(post1, post2);
+      setActivated(post1, false);
+      setActivated(post2, false);
       connectedPosts.clear();
     }
   }
 }
 
 
+
 // creates a new post-it note based on a reference
 function createPostIt(reference, exact = false) {
   if (reference) {
+    // referencing post-it parts
     let newElement = reference.cloneNode(true);
     let newElementHeader = newElement.querySelector(".post-it-header");
 
-    newElement.hidden = false;
+    // setting various attributes
     newElement.id = "p" + numPosts;
     newElementHeader.id = "ph" + numPosts++;
+    newElement.hidden = false;
 
+    // duplication and non-duplication
     if (exact) {
       newElement.style.top = parseInt(reference.style.top) + 10 + "px";
       newElement.style.left = parseInt(reference.style.left) + 10 + "px";
@@ -49,6 +56,8 @@ function createPostIt(reference, exact = false) {
       newElement.style.left = "0px";
       newElement.querySelector(".post-it-content").value = "";
     }
+
+    // applying logic and adding to DOM
     dragElement(newElement);
     setActivated(newElement, false);
     newElement.addEventListener("contextmenu", rightClickElement);
@@ -56,43 +65,21 @@ function createPostIt(reference, exact = false) {
   }
 }
 
-// adds event listeners to vaiorus elements
+// adds event listeners to various elements
 function applyLogic() {
-  // other buttons
-  document
-    .getElementById("duplicate-button")
-    .addEventListener("click", () => createPostIt(originalPostIt));
-
   // context menu
   let menu = document.getElementById("contextMenu");
   menu
     .querySelector("#context-connect")
-    .addEventListener("click", () => setActivated(getFocusedPostIt(), true));
+    .addEventListener("click", () => connectPostIt(getFocusedPostIt()));
   menu
     .querySelector("#context-duplicate")
     .addEventListener("click", () => createPostIt(getFocusedPostIt(), true));
   menu
     .querySelector("#context-delete")
-    .addEventListener("click", () => deleteElement(getFocusedPostIt()));
-  
+    .addEventListener("click", () => deletePostIt(getFocusedPostIt()));
+  // other buttons
+  document
+    .getElementById("duplicate-button")
+    .addEventListener("click", () => createPostIt(originalPostIt));
 }
-
-// document
-//   .getElementById("allposts")
-//   .addEventListener("submit", function (event) {
-//     event.preventDefault(); // stops automatic reloading
-
-//     const formData = new FormData(this);
-//     const post1 = formData.get("post1");
-//     const post2 = formData.get("post2");
-
-//     const posts = [];
-//     posts.push(post1, post2);
-//     logTs(posts);
-//   });
-
-// function logTs(posts) {
-//   for (const t of posts) {
-//     console.log(t);
-//   }
-// }

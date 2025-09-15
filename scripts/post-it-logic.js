@@ -1,8 +1,37 @@
 let order = 0;
 let focusedPostIt;
 
-let connectedPosts = new Set();
+// returns the post-it that was right clicked
+function getFocusedPostIt() {
+  return focusedPostIt;
+}
 
+// removes post-it from the DOM and any related connections
+function deletePostIt(postIt) {
+  if (connectedPosts.has(postIt)) connectedPosts.delete(postIt);
+  // gotta remove the insight thing (specifically need to remove the connection as well)
+  postIt.remove();
+}
+
+// presents context menu when a post-it is right clicked
+function rightClickElement(event) {
+  event.preventDefault();
+
+  // gets closest post-it
+  focusedPostIt = event.target.closest(".post-it");
+  let menu = document.getElementById("contextMenu");
+
+  // sets appearance
+  menu.style.left = event.clientX + "px";
+  menu.style.top = event.clientY + "px";
+  menu.hidden = false;
+
+  document.onclick = () => {
+    menu.hidden = true;
+  };
+}
+
+// sets post-it appearance when "connect" is selected in the context menu
 function setActivated(postIt, turnOn) {
   let postItHeaderState = postIt
     .querySelector(".post-it-header")
@@ -16,33 +45,7 @@ function setActivated(postIt, turnOn) {
   }
 }
 
-function getFocusedPostIt() {
-  return focusedPostIt;
-}
-
-function deleteElement(postIt) {
-  if (connectedPosts.has(postIt)) connectedPosts.delete(postIt);
-  // gotta remove the insight thing (specifically need to remove the connection as well)
-  postIt.remove();
-}
-
-function rightClickElement(event) {
-  event.preventDefault();
-
-  focusedPostIt = event.target.closest(".post-it");
-
-  console.log(focusedPostIt);
-  let menu = document.getElementById("contextMenu");
-
-  document.onclick = () => {
-    menu.hidden = true;
-  };
-
-  menu.hidden = false;
-  menu.style.left = event.clientX + "px";
-  menu.style.top = event.clientY + "px";
-}
-
+// post-it dragging logic
 function dragElement(postIt) {
   let postItHeader = postIt.querySelector(".post-it-header");
   const moveableArea = document.getElementById("moveable-area");
@@ -58,8 +61,7 @@ function dragElement(postIt) {
     postItWidth,
     postItHeight,
     moveableRect,
-    postItRect,
-    headerRect;
+    postItRect;
 
   postItHeader.addEventListener("mousedown", mouseDown);
 
@@ -69,8 +71,7 @@ function dragElement(postIt) {
     moveableRect = moveableArea.getBoundingClientRect();
     postItWidth = postItRect.width;
     postItHeight = postItRect.height;
-    
-    
+
     maxX = moveableRect.width;
     maxY = moveableRect.height;
 
@@ -88,7 +89,7 @@ function dragElement(postIt) {
 
   function mouseDrag(event) {
     event.preventDefault();
-    
+
     postIt.classList.add("dragged");
 
     currX = event.clientX;
@@ -109,15 +110,15 @@ function dragElement(postIt) {
   }
 
   function mouseUp() {
-    postIt.classList.remove("dragged");
     document.removeEventListener("mousemove", mouseDrag);
     document.removeEventListener("mouseup", mouseUp);
+    postIt.classList.remove("dragged");
   }
 }
 
 export {
   dragElement,
-  deleteElement,
+  deletePostIt,
   rightClickElement,
   getFocusedPostIt,
   setActivated,

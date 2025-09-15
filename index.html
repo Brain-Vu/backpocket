@@ -14,6 +14,18 @@
     </div>
 
     <div id="moveable-area">
+      <div id="connections">
+        <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <line
+            x1="0px"
+            y1="0px"
+            x2="0px"
+            y2="0px"
+            style="stroke: #e34d50; stroke-width: 2"
+            id="l"
+          />
+        </svg>
+      </div>
       <div class="post-it" id="p" hidden>
         <div class="post-it-header" id="ph">
           <div class="post-it-header-state">x</div>
@@ -39,5 +51,6 @@
     </div>
     <script src="./scripts/post-it-logic.js" type="module"></script>
     <script src="./scripts/page-logic.js" type="module"></script>
+    <script src="./scripts/connection-logic.js" type="module"></script>
   </body>
 </html>
