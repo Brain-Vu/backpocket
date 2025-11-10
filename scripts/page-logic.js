@@ -6,7 +6,7 @@ import {
   setActivated,
 } from "./post-it-logic.js";
 
-import { addConnection, deleteConnection } from "./connection-logic.js";
+import { addConnection, deleteRelated } from "./connection-logic.js";
 
 let numPosts = 0;
 let originalPostIt = document.getElementById("p");
@@ -26,14 +26,10 @@ function connectPostIt(postIt) {
     if (connectedPosts.size == 2) {
       const [post1, post2] = [...connectedPosts];
       addConnection(post1, post2);
-      setActivated(post1, false);
-      setActivated(post2, false);
       connectedPosts.clear();
     }
   }
 }
-
-
 
 // creates a new post-it note based on a reference
 function createPostIt(reference, exact = false) {
@@ -65,6 +61,12 @@ function createPostIt(reference, exact = false) {
   }
 }
 
+// deletion wrapper function
+function deleteLogic(postIt) {
+  deleteRelated(postIt);
+  deletePostIt(postIt);
+}
+
 // adds event listeners to various elements
 function applyLogic() {
   // context menu
@@ -77,7 +79,7 @@ function applyLogic() {
     .addEventListener("click", () => createPostIt(getFocusedPostIt(), true));
   menu
     .querySelector("#context-delete")
-    .addEventListener("click", () => deletePostIt(getFocusedPostIt()));
+    .addEventListener("click", () => deleteLogic(getFocusedPostIt()));
   // other buttons
   document
     .getElementById("duplicate-button")

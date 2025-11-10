@@ -8,7 +8,6 @@ function getFocusedPostIt() {
 
 // removes post-it from the DOM and any related connections
 function deletePostIt(postIt) {
-  if (connectedPosts.has(postIt)) connectedPosts.delete(postIt);
   // gotta remove the insight thing (specifically need to remove the connection as well)
   postIt.remove();
 }
