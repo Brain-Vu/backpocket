@@ -40,13 +40,13 @@ body {
   height: 100%;
   width: 100%;
 }
-.advice {
+.box {
   background-color: #e34d50;
   height: 72px;
   width: 72px;
   position: absolute;
   border-radius: 4px 4px 4px 4px;
-
+  z-index: 1000;
 }
 
 /* Context Menu Formatting */

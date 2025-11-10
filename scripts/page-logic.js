@@ -63,7 +63,7 @@ function createPostIt(reference, exact = false) {
 
 // deletion wrapper function
 function deleteLogic(postIt) {
-  deleteRelated(postIt);
+  deleteRelated(postIt, setActivated);
   deletePostIt(postIt);
 }
 
